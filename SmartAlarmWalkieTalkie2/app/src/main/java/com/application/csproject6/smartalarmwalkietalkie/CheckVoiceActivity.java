@@ -177,7 +177,7 @@ public class CheckVoiceActivity extends Activity implements View.OnClickListener
 
 
             //fix-SH
-            if(myApp.music.isPlaying())
+            if(myApp.Music.isPlaying())
                 myApp.stopMusic();
 
 
@@ -213,7 +213,7 @@ public class CheckVoiceActivity extends Activity implements View.OnClickListener
 
     @Override
     public void onEndOfSpeech() {
-        //TODO implement interface DaumSpeechRecognizeListener method
+
     }
 
     @Override
@@ -236,7 +236,11 @@ public class CheckVoiceActivity extends Activity implements View.OnClickListener
         }, 0);
         //fix-SH
 
-        myApp.startMusic(myApp.selectFile(getApplicationContext()));
+        if(ReceivingMessage.firstsong == false) {
+            myApp.startMusic(myApp.selectFile(getApplicationContext()));
+        }
+
+
         startService(sIntent);
 
 
@@ -274,14 +278,12 @@ public class CheckVoiceActivity extends Activity implements View.OnClickListener
     }
     @Override
     public void onResults(Bundle results) {
-        final StringBuilder builder = new StringBuilder();
+
         Log.i("SpeechSampleActivity", "onResults");
 
         ArrayList<String> texts = results.getStringArrayList(SpeechRecognizerClient.KEY_RECOGNITION_RESULTS);
-        ArrayList<Integer> confs = results.getIntegerArrayList(SpeechRecognizerClient.KEY_CONFIDENCE_VALUES);
 
-
-        Log.e("TEXT:",texts.get(0));
+       Log.e("TEXT:",texts.get(0));
 
         //?뺥솗???뺤씤
         TextView givenTextView = (TextView)findViewById(R.id.viewText);
@@ -289,11 +291,11 @@ public class CheckVoiceActivity extends Activity implements View.OnClickListener
         String givenString = givenText.replace("\n","").replaceAll(" ","");
         String getString = null;
 
-        Log.e("TEXT:",givenString);
+        Log.e("TEXT:", givenString);
         for(int i=0; i<texts.size(); i++){
             getString = texts.get(i).replace("\n","").replaceAll(" ","");
-            if(LevenshteinDistance.computeLevenshteinDistance(getString,givenString)
-                <= 2){
+            if((double)LevenshteinDistance.computeLevenshteinDistance(getString,givenString)/(double)givenString.length()
+                <= 0.4){
                 status = PASS_THE_TEST;
                 break;
             }else{
@@ -306,6 +308,11 @@ public class CheckVoiceActivity extends Activity implements View.OnClickListener
             user.put("status", PASS_THE_TEST);
             user.saveInBackground();
 
+            //////
+            if(ReceivingMessage.firstsong == false)
+                SampleApplication.stopMusic();
+            else
+                SampleApplication.stopSong();
 
             Intent next =  new Intent(getApplicationContext(), GroupAlarmActivity.class);
             startActivity(next);

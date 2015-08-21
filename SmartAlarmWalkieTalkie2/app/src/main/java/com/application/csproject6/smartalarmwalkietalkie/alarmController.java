@@ -203,7 +203,7 @@ public class alarmController extends Service {
 
         public void stopAlarmT() throws RemoteException {
             SampleApplication myApp = (SampleApplication) getApplicationContext();
-            myApp.music.stop();
+            myApp.Music.stop();
         }
     };
 

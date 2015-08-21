@@ -32,6 +32,9 @@ public class ReceivingMessage extends IntentService {
     public ReceivingMessage(){
         super("ReceivingMessage");
     }
+
+    public static boolean firstsong = false;
+
     @Override
     protected void onHandleIntent(Intent intent) {
         Log.d(TAG, "START");
@@ -47,25 +50,34 @@ public class ReceivingMessage extends IntentService {
 
         while(user.getInt("status") != PASS_THE_TEST)
         {
-            Log.i("receivingMsg","while!!");
+            Log.i("receivingMsg", "while!!");
             ParseUser.getCurrentUser().put("status", user.getInt("status"));
             ParseUser.getCurrentUser().saveInBackground();
-            soundQuery.whereEqualTo("group",current_group);
-            soundQuery.whereEqualTo("receiver",user.getObjectId());
+            soundQuery.whereEqualTo("group", current_group);
+            soundQuery.whereEqualTo("receiver", user.getObjectId());
             soundQuery.findInBackground(new FindCallback<ParseObject>() {
                 @Override
                 public void done(List<ParseObject> list, ParseException e) {
-                    if (list==null || list.isEmpty()) {
+                    if (list == null || list.isEmpty()) {
                         Log.i("receivingMsg", "emptyList");
                         return;
-                    }
-                    else {
+                    } else {
                         if (e == null) {
                             for (ParseObject object : list) {
                                 Log.i("receivingMsg", "savefile");
                                 saveFile(object);
                             }
-                            playMusic();
+
+                            if(firstsong == false) {
+                                SampleApplication.stopMusic();
+                                ((SampleApplication) getApplicationContext()).updateSongList();
+                                Song();
+                            }
+                            else //firstsong_true.
+                            {
+                                ((SampleApplication) getApplicationContext()).updateSongList();
+                            }
+
 
                         } else {
                             Log.d("score", "Error: " + e.getMessage());
@@ -76,15 +88,16 @@ public class ReceivingMessage extends IntentService {
 
 
             try {
-                Thread.sleep(15000);
+                Thread.sleep(3000);
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
-                ((SampleApplication)getApplicationContext()).stopMusic();
+                //SampleApplication.stopMusic();
                 return;
             }
         }
+        //SampleApplication.stopSong();
 
-        Log.d(TAG,"END");
+        Log.d(TAG, "END");
     }
 
     @Override
@@ -125,10 +138,16 @@ public class ReceivingMessage extends IntentService {
         });
         return;
     }
-    public void playMusic(){
-        ((SampleApplication) getApplicationContext()).updateSongList();
+    public void Song(){
+
+        Log.d("spchoi" , "InSong");
         if(!((SampleApplication) getApplicationContext()).songs.isEmpty()){
             ((SampleApplication) getApplicationContext()).playSong(((SampleApplication) getApplicationContext()).songs.get(0));
+
+            Log.d("spchoi" , "junsong is started");
+            SampleApplication.Junesong = true;
+            firstsong = true;
+
         }
 
     }

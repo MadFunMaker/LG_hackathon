@@ -53,10 +53,14 @@ public class SampleApplication extends Application {
     public ArrayList<String> LazyUserList;
     public ArrayList<String> WtUserList;
 
-    public List<String> songs = new ArrayList<String>();
-    int currentPosition;
+    public static List<String> songs = new ArrayList<String>();
 
-    MediaPlayer music;
+    public static boolean Junesong = false;
+
+    int currentPosition;
+    public static MediaPlayer Music;
+    public static MediaPlayer Song;
+
     private ParseObject current_group;
     @Override
     public void onCreate() {
@@ -111,17 +115,17 @@ public class SampleApplication extends Application {
     public void startMusic(AssetFileDescriptor descriptor){
 
         try {
-            music.reset();
-            music.setDataSource(descriptor.getFileDescriptor(), descriptor.getStartOffset(), descriptor.getLength());
+            Music.reset();
+            Music.setDataSource(descriptor.getFileDescriptor(), descriptor.getStartOffset(), descriptor.getLength());
             descriptor.close();
-            music.prepare();
-            music.start();
-            music.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            Music.prepare();
+            Music.start();
+            Music.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 
                 public void onCompletion(MediaPlayer arg0) {
                     /* ?
                     ��코드 ?��?���? 뭐�?? */
-                    music.start();
+                    Music.start();
                 }
 
             });
@@ -129,11 +133,13 @@ public class SampleApplication extends Application {
             e.printStackTrace();
         }
     }
-    public void stopMusic(){
-        music.stop();
+    public static void stopMusic(){
+        Music.stop();
     }
-    public void pauseMusic(){
-        music.pause();
+
+    public static void stopSong(){
+        Song.stop();
+        SampleApplication.Junesong = false;
     }
 
     public AssetFileDescriptor selectFile(Context context){
@@ -171,13 +177,13 @@ public class SampleApplication extends Application {
 
     public void playSong(String songPath) {
         try {
-            music.reset();
-            music.setDataSource(songPath);
-            music.prepare();
-            music.start();
+            Song.reset();
+            Song.setDataSource(songPath);
+            Song.prepare();
+            Song.start();
 
             // Setup listener so next song starts automatically
-            music.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            Song.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 
                 public void onCompletion(MediaPlayer arg0) {
                     nextSong();
@@ -193,11 +199,25 @@ public class SampleApplication extends Application {
     private void nextSong() {
 
         String filepath = Environment.getExternalStorageDirectory().getPath();
-        if (++currentPosition >= songs.size()) {
+        Log.d("spchoi" , "size of songs :" + songs.size());
+        /*if (++currentPosition >= songs.size()) {
             // Last song, just reset currentPosition
             currentPosition = 0;
+        }*/
+        if(currentPosition == (songs.size() - 1))
+        {
+            currentPosition = 0;
         }
-        playSong(songs.get(currentPosition));
+        else
+        {
+            currentPosition = currentPosition + 1;
+        }
+
+        if(SampleApplication.Junesong == true) {
+            playSong(songs.get(currentPosition));
+            Log.d("spchoi" , "position : " + currentPosition);
+        }
+
 
     }
 
