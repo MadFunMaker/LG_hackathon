@@ -52,7 +52,7 @@ public class SampleApplication extends Application {
 
     public ArrayList<String> LazyUserList;
 
-    public List<String> songs = new ArrayList<String>();
+    public static List<String> songs = new ArrayList<String>();
 
     public static boolean Junesong = false;
 
@@ -198,13 +198,23 @@ public class SampleApplication extends Application {
     private void nextSong() {
 
         String filepath = Environment.getExternalStorageDirectory().getPath();
-        if (++currentPosition >= songs.size()) {
+        Log.d("spchoi" , "size of songs :" + songs.size());
+        /*if (++currentPosition >= songs.size()) {
             // Last song, just reset currentPosition
             currentPosition = 0;
+        }*/
+        if(currentPosition == (songs.size() - 1))
+        {
+            currentPosition = 0;
+        }
+        else
+        {
+            currentPosition = currentPosition + 1;
         }
 
         if(SampleApplication.Junesong == true) {
             playSong(songs.get(currentPosition));
+            Log.d("spchoi" , "position : " + currentPosition);
         }
 
 

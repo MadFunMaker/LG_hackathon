@@ -70,8 +70,14 @@ public class ReceivingMessage extends IntentService {
 
                             if(firstsong == false) {
                                 SampleApplication.stopMusic();
+                                ((SampleApplication) getApplicationContext()).updateSongList();
                                 Song();
                             }
+                            else //firstsong_true.
+                            {
+                                ((SampleApplication) getApplicationContext()).updateSongList();
+                            }
+
 
                         } else {
                             Log.d("score", "Error: " + e.getMessage());
@@ -133,7 +139,6 @@ public class ReceivingMessage extends IntentService {
         return;
     }
     public void Song(){
-        ((SampleApplication) getApplicationContext()).updateSongList();
 
         Log.d("spchoi" , "InSong");
         if(!((SampleApplication) getApplicationContext()).songs.isEmpty()){

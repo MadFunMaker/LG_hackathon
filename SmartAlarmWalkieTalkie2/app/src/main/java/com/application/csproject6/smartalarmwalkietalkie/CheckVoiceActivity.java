@@ -308,6 +308,7 @@ public class CheckVoiceActivity extends Activity implements View.OnClickListener
             user.put("status", PASS_THE_TEST);
             user.saveInBackground();
 
+            //////
             if(ReceivingMessage.firstsong == false)
                 SampleApplication.stopMusic();
             else
