@@ -170,22 +170,6 @@ public class listenVoiceActivity extends Activity
                     }
                 });
 
-
-                /*
-                ParseQuery pushQuery = ParseInstallation.getQuery();
-                pushQuery.whereEqualTo("channels", "Giants");
-                ParsePush push = new ParsePush();
-                push.setQuery(pushQuery);
-                StringBuilder sv = new StringBuilder();
-                for(int i = 0; i < buffer.length - 1 ; i++)
-                {
-                    sv.append(buffer[i]);
-                }
-                Log.d("spchoi" , sv.toString());
-                push.setMessage(sv.toString());
-                push.sendInBackground();
-                */
-
                 Log.i("listenVoice","sendBtn to deleteFile");
                 deleteFile();
 

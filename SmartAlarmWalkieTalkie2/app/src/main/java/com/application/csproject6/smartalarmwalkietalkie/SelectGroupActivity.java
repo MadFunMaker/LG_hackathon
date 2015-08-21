@@ -77,8 +77,8 @@ public class SelectGroupActivity extends FragmentActivity {
         user = ParseUser.getCurrentUser();
 
 
-
-        ((SampleApplication) getApplicationContext()).music = new MediaPlayer();
+        SampleApplication.Music = new MediaPlayer();
+        SampleApplication.Song = new MediaPlayer();
 
         groupUpdate();
         groupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -406,7 +406,7 @@ public class SelectGroupActivity extends FragmentActivity {
     }
     public void onDestroy() {
         super.onDestroy();
-        ((SampleApplication)getApplicationContext()).music.release();
+        //SampleApplication.music.release();
     }
 }
 

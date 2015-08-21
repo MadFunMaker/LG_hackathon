@@ -177,7 +177,7 @@ public class CheckVoiceActivity extends Activity implements View.OnClickListener
 
 
             //fix-SH
-            if(myApp.music.isPlaying())
+            if(myApp.Music.isPlaying())
                 myApp.stopMusic();
 
 
@@ -306,7 +306,7 @@ public class CheckVoiceActivity extends Activity implements View.OnClickListener
             user.put("status", PASS_THE_TEST);
             user.saveInBackground();
 
-
+            SampleApplication.stopMusic();
             Intent next =  new Intent(getApplicationContext(), GroupAlarmActivity.class);
             startActivity(next);
             finish();
