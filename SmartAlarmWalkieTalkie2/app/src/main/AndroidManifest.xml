@@ -87,6 +87,9 @@
         <service android:name=".ReceivingMessage" >
         </service>
 
+        <service android:name=".SDpleaseWorkMKII" >
+        </service>
+
         <service android:name="com.parse.PushService" />
 
         <receiver android:name="com.parse.ParseBroadcastReceiver" >

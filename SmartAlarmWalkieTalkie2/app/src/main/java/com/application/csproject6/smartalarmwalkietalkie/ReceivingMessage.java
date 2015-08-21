@@ -52,49 +52,49 @@ public class ReceivingMessage extends IntentService {
         {
             Log.i("receivingMsg", "while!!");
             ParseUser.getCurrentUser().put("status", user.getInt("status"));
-            ParseUser.getCurrentUser().saveInBackground();
-            soundQuery.whereEqualTo("group", current_group);
-            soundQuery.whereEqualTo("receiver", user.getObjectId());
-            soundQuery.findInBackground(new FindCallback<ParseObject>() {
-                @Override
-                public void done(List<ParseObject> list, ParseException e) {
-                    if (list == null || list.isEmpty()) {
-                        Log.i("receivingMsg", "emptyList");
-                        return;
-                    } else {
-                        if (e == null) {
-                            for (ParseObject object : list) {
-                                Log.i("receivingMsg", "savefile");
-                                saveFile(object);
-                            }
-
-                            if(firstsong == false) {
-                                SampleApplication.stopMusic();
-                                ((SampleApplication) getApplicationContext()).updateSongList();
-                                Song();
-                            }
-                            else //firstsong_true.
-                            {
-                                ((SampleApplication) getApplicationContext()).updateSongList();
-                            }
-
-
-                        } else {
-                            Log.d("score", "Error: " + e.getMessage());
+        ParseUser.getCurrentUser().saveInBackground();
+        soundQuery.whereEqualTo("group", current_group);
+        soundQuery.whereEqualTo("receiver", user.getObjectId());
+        soundQuery.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> list, ParseException e) {
+                if (list == null || list.isEmpty()) {
+                    Log.i("receivingMsg", "emptyList");
+                    return;
+                } else {
+                    if (e == null) {
+                        for (ParseObject object : list) {
+                            Log.i("receivingMsg", "savefile");
+                            saveFile(object);
                         }
+
+                        if(firstsong == false) {
+                            SampleApplication.stopMusic();
+                            ((SampleApplication) getApplicationContext()).updateSongList();
+                            Song();
+                        }
+                        else //firstsong_true.
+                        {
+                            ((SampleApplication) getApplicationContext()).updateSongList();
+                        }
+
+
+                    } else {
+                        Log.d("score", "Error: " + e.getMessage());
                     }
                 }
-            });
-
-
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e1) {
-                e1.printStackTrace();
-                //SampleApplication.stopMusic();
-                return;
             }
+        });
+
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e1) {
+            e1.printStackTrace();
+            //SampleApplication.stopMusic();
+            return;
         }
+    }
         //SampleApplication.stopSong();
 
         Log.d(TAG, "END");
