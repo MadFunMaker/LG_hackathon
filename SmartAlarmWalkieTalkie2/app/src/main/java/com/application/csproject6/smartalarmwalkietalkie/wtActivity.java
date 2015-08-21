@@ -90,6 +90,9 @@ public class wtActivity extends Activity {
 
     // Intent
     Intent sIntent; //service Intent
+    final int ISCONFIRM = 1;
+    final int ISNOTCONFIRM = 0;
+    int isConfirm = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,20 +123,22 @@ public class wtActivity extends Activity {
         name.setText(my_app.getCurrent_group().get("name").toString());
         toggleSwitch = (Switch) findViewById(R.id.confSwitch_wt);
 
-//        toggleSwitch .setOnCheckedChangeListener(new OnCheckedChangeListener() {
-//
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView,
-//                                         boolean isChecked) {
-//
-//                if (isChecked) {
-//                    // wait for confirmation of receipt.
-//                } else {
-//                    // quit to wait for confirmation of receipt.
-//                }
-//
-//            }
-//        });
+        toggleSwitch .setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,
+                                         boolean isChecked) {
+
+                if (isChecked) {
+                    // wait for confirmation of receipt.
+                    isConfirm = ISCONFIRM;
+                } else {
+                    // quit to wait for confirmation of receipt.
+                    isConfirm = ISNOTCONFIRM;
+                }
+
+            }
+        });
 
         // Create WtUserList
         my_app.WtUserList= new ArrayList<>();
@@ -269,6 +274,7 @@ public class wtActivity extends Activity {
 
                             Log.e("bsjeon", "SEND FILE!");
                             ParseFile pfile = new ParseFile("sendFile", buffer);
+                            newVoiceMsg.put("isconfirm", isConfirm);
                             newVoiceMsg.put("message", pfile);
                             newVoiceMsg.put("group", ((SampleApplication) getApplication()).getCurrent_group());
                             newVoiceMsg.saveInBackground(new SaveCallback() {

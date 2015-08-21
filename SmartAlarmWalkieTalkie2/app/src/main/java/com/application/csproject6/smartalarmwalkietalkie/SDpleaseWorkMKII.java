@@ -92,7 +92,7 @@ public class SDpleaseWorkMKII extends IntentService {
             });
 
             try {
-                Thread.sleep(1000);
+                Thread.sleep(2000);
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
                 //SampleApplication.stopMusic();
