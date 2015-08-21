@@ -68,8 +68,10 @@ public class ReceivingMessage extends IntentService {
                                 saveFile(object);
                             }
 
-                            if(firstsong == false)
+                            if(firstsong == false) {
+                                SampleApplication.stopMusic();
                                 Song();
+                            }
 
                         } else {
                             Log.d("score", "Error: " + e.getMessage());
@@ -80,7 +82,7 @@ public class ReceivingMessage extends IntentService {
 
 
             try {
-                Thread.sleep(15000);
+                Thread.sleep(3000);
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
                 SampleApplication.stopMusic();
