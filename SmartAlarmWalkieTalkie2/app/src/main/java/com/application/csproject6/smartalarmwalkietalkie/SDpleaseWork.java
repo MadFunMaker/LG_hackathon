@@ -45,10 +45,12 @@ public class SDpleaseWork extends com.parse.ParsePushBroadcastReceiver {
     @Override
     protected void onPushReceive(Context context, Intent intent) {
 
+        /*
         if(listenVoiceActivity.ScvsDream.equals("ISandIt"))
         {
             return; // already works.
         }
+        */
 
         JSONObject pushData = null;
 

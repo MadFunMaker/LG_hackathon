@@ -81,7 +81,7 @@ public class SampleApplication extends Application {
           }
       });
 
-        /* TestCode for push Services.
+/*
         Log.d("spchoi", "here is good");
 
         ParseQuery pushQuery = ParseInstallation.getQuery();
@@ -91,9 +91,8 @@ public class SampleApplication extends Application {
         push.setMessage("The Giants just scored! It's now 2-2 against the Mets.");
         push.sendInBackground();
 
-
         Log.d("spchoi" , "helpMe");
-        */
+*/
 
     Parse.setLogLevel(Parse.LOG_LEVEL_DEBUG);
   }
