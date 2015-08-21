@@ -146,7 +146,7 @@ public class GroupAlarmActivity extends Activity {
             final int pos = position;
             final Context context = parent.getContext();
 
-            
+
             if ( convertView == null ) {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(R.layout.user_status, parent, false);
