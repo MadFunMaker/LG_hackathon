@@ -17,10 +17,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.parse.FindCallback;
 import com.parse.GetCallback;
@@ -65,6 +68,7 @@ import java.util.Timer;
 public class wtActivity extends Activity {
     TextView name;
     ParseObject group;
+    Switch toggleSwitch;
 
     private user_Adapter adapter;
     private ListView listview;
@@ -114,6 +118,22 @@ public class wtActivity extends Activity {
         name = (TextView) findViewById(R.id.wtName);
         my_app=(SampleApplication)getApplication();
         name.setText(my_app.getCurrent_group().get("name").toString());
+        toggleSwitch = (Switch) findViewById(R.id.confSwitch_wt);
+
+//        toggleSwitch .setOnCheckedChangeListener(new OnCheckedChangeListener() {
+//
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView,
+//                                         boolean isChecked) {
+//
+//                if (isChecked) {
+//                    // wait for confirmation of receipt.
+//                } else {
+//                    // quit to wait for confirmation of receipt.
+//                }
+//
+//            }
+//        });
 
         // Create WtUserList
         my_app.WtUserList= new ArrayList<>();

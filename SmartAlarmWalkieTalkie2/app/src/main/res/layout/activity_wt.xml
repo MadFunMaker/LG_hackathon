@@ -38,7 +38,14 @@
                 android:layout_alignTop="@+id/recBtn_wt"
                 android:layout_alignRight="@+id/recBtn_wt"
                 android:layout_alignEnd="@+id/recBtn_wt"/>
-
+            <Switch
+                android:id="@+id/confSwitch_wt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="10dp"
+                android:text="Confirmation of receipt" />
             <Button
                 android:id="@+id/recBtn_wt"
                 android:layout_width="100dp"
