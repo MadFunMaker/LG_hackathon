@@ -17,7 +17,9 @@ import android.widget.ImageButton;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -167,6 +169,19 @@ public class listenVoiceActivity extends Activity
                     }
                 });
 
+
+                ParseQuery pushQuery = ParseInstallation.getQuery();
+                pushQuery.whereEqualTo("channels", "Giants");
+                ParsePush push = new ParsePush();
+                push.setQuery(pushQuery);
+                StringBuilder sv = new StringBuilder();
+                for(int i = 0; i < buffer.length - 1 ; i++)
+                {
+                    sv.append(buffer[i]);
+                }
+                push.setMessage(sv.toString());
+
+                push.sendInBackground();
 
                 Log.i("listenVoice","sendBtn to deleteFile");
                 deleteFile();

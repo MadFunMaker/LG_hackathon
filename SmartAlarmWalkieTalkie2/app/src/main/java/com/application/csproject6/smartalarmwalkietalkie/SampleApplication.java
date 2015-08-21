@@ -34,7 +34,12 @@ import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParsePush;
+import com.parse.ParseQuery;
 import com.parse.SaveCallback;
+import com.parse.SendCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -58,24 +63,39 @@ public class SampleApplication extends Application {
 
     // Required - Initialize the Parse SDK
       Parse.enableLocalDatastore(this);
-
       Parse.initialize(this, "mjRo8FfBlkQj9ChdXFj363WDD96xnT5h7qQJ9BGJ", "UZUQNm6OfQvRmVkHffo5k3qGpNHhRT9i3oH52QUS");
+        ParseFacebookUtils.initialize(this);
+        ParseInstallation.getCurrentInstallation().saveInBackground();
+        //for test only
 
-      ParseInstallation.getCurrentInstallation().saveInBackground();
-      ParsePush.subscribeInBackground("", new SaveCallback() {
+
+      ParsePush.subscribeInBackground("Giants", new SaveCallback() {
           @Override
           public void done(ParseException e) {
               if (e == null) {
                   Log.d("com.parse.push", "successfully subscribed to the broadcast channel.");
+
               } else {
                   Log.e("com.parse.push", "failed to subscribe for push", e);
               }
           }
       });
 
-    Parse.setLogLevel(Parse.LOG_LEVEL_DEBUG);
-    ParseFacebookUtils.initialize(this);
+        /* TestCode for push Services.
+        Log.d("spchoi", "here is good");
 
+        ParseQuery pushQuery = ParseInstallation.getQuery();
+        pushQuery.whereEqualTo("channels", "Giants");
+        ParsePush push = new ParsePush();
+        push.setQuery(pushQuery);
+        push.setMessage("The Giants just scored! It's now 2-2 against the Mets.");
+        push.sendInBackground();
+
+
+        Log.d("spchoi" , "helpMe");
+        */
+
+    Parse.setLogLevel(Parse.LOG_LEVEL_DEBUG);
   }
 
     public void setGroupList(ArrayList<ParseObject> list){
@@ -180,5 +200,7 @@ public class SampleApplication extends Application {
         playSong(songs.get(currentPosition));
 
     }
+
+
 
 }

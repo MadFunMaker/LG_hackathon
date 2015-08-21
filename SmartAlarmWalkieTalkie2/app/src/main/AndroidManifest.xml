@@ -12,6 +12,12 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
+
+    <permission android:protectionLevel="signature"
+        android:name="com.application.csproject6.smartalarmwalkietalkie.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.application.csproject6.smartalarmwalkietalkie.permission.C2D_MESSAGE" />
+
+
     <application
         android:name=".SampleApplication"
         android:allowBackup="true"
@@ -76,10 +82,8 @@
         <service
             android:name=".ReceivingMessage">
         </service>
-            
 
-        <receiver android:name=".alarmReceiver">
-        </receiver>
+
         <service android:name="com.parse.PushService" />
         <receiver android:name="com.parse.ParseBroadcastReceiver">
             <intent-filter>
@@ -87,35 +91,27 @@
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.parse.ParsePushBroadcastReceiver"
-            android:exported="false">
+
+        <receiver android:name="com.parse.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+                <category android:name="com.application.csproject6.smartalarmwalkietalkie" />
+            </intent-filter>
+        </receiver>
+        <!--application.csproject6.smartalarmwalkietalkie.SDpleaseWork-->
+        <receiver android:name="com.application.csproject6.smartalarmwalkietalkie.SDpleaseWork" android:exported="false">
             <intent-filter>
                 <action android:name="com.parse.push.intent.RECEIVE" />
                 <action android:name="com.parse.push.intent.DELETE" />
                 <action android:name="com.parse.push.intent.OPEN" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.parse.GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND">
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
-                <!--
-                  IMPORTANT: Change "com.parse.starter" to match your app's package name.
-                -->
-                <category android:name="com.application.csproject6.smartalarmwalkietalkie" />
-            </intent-filter>
+
+        <receiver android:name=".alarmReceiver">
         </receiver>
-
-        <!--
-          IMPORTANT: Change "com.parse.starter.permission.C2D_MESSAGE" in the lines below
-          to match your app's package name + ".permission.C2D_MESSAGE".
-        -->
-        <permission android:protectionLevel="signature"
-            android:name="com.application.csproject6.smartalarmwalkietalkie.permission.C2D_MESSAGE" />
-
-        <uses-permission android:name="com.application.csproject6.smartalarmwalkietalkie.permission.C2D_MESSAGE" />
 
     </application>
 

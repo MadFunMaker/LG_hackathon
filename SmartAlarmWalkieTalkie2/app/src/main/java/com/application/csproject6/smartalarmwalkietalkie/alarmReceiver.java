@@ -18,7 +18,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class alarmReceiver extends BroadcastReceiver {
     SampleApplication myApp = null;
-    
+
     public void onReceive(Context context, Intent intent){
         long currTime = System.currentTimeMillis();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
