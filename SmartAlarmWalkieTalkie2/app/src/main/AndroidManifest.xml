@@ -105,7 +105,7 @@
         </receiver>
         <!-- application.csproject6.smartalarmwalkietalkie.SDpleaseWork -->
         <receiver
-            android:name=".SDpleaseWork"
+            android:name="com.application.csproject6.smartalarmwalkietalkie.SDpleaseWork"
             android:exported="false" >
             <intent-filter>
                 <action android:name="com.parse.push.intent.RECEIVE" />
