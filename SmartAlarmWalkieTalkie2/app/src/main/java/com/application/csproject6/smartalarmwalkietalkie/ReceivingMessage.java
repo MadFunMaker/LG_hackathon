@@ -68,11 +68,8 @@ public class ReceivingMessage extends IntentService {
                                 saveFile(object);
                             }
 
-                            if (firstsong == false) {
+                            if(firstsong == false)
                                 Song();
-                                SampleApplication.Junesong = true;
-                                firstsong = true;
-                            }
 
                         } else {
                             Log.d("score", "Error: " + e.getMessage());
@@ -86,7 +83,7 @@ public class ReceivingMessage extends IntentService {
                 Thread.sleep(15000);
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
-                ((SampleApplication)getApplicationContext()).stopMusic();
+                SampleApplication.stopMusic();
                 return;
             }
         }
@@ -136,8 +133,15 @@ public class ReceivingMessage extends IntentService {
     }
     public void Song(){
         ((SampleApplication) getApplicationContext()).updateSongList();
+
+        Log.d("spchoi" , "InSong");
         if(!((SampleApplication) getApplicationContext()).songs.isEmpty()){
             ((SampleApplication) getApplicationContext()).playSong(((SampleApplication) getApplicationContext()).songs.get(0));
+
+            Log.d("spchoi" , "junsong is started");
+            SampleApplication.Junesong = true;
+            firstsong = true;
+
         }
 
     }
