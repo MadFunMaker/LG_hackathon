@@ -190,11 +190,15 @@ public class GroupAlarmActivity extends Activity {
     }
 
     public void updateListView() {
-        Date current = new Date();
 
 
         group = ((SampleApplication) getApplication()).getCurrent_group();
-
+        try{
+            group.fetchIfNeeded();
+        }
+        catch(Exception e){
+            
+        }
         List<ParseUser> users = group.getList("member");
         adapter = new user_Adapter();
         listview = (ListView) findViewById(R.id.userList);
