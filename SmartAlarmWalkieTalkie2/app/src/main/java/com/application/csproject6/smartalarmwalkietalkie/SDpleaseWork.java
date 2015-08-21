@@ -84,7 +84,7 @@ public class SDpleaseWork extends com.parse.ParsePushBroadcastReceiver {
             try {
 
                 byte[] sd_buffer = scvsdrem.getString("alert").getBytes(Charset.forName("UTF-8"));
-                
+
                 String currentFilePath = Environment.getExternalStorageDirectory().getPath()+"/musicfile.wav";
                 File temp = new File(currentFilePath);
                 FileOutputStream fos = null;
