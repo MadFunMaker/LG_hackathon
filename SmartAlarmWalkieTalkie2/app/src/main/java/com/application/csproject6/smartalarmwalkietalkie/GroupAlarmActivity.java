@@ -49,7 +49,7 @@ public class GroupAlarmActivity extends Activity {
         Collection<ParseObject> groups = ParseUser.getCurrentUser().getList("joinGroup");
         Intent intent = getIntent();
         updateListView();
-        refresh = (Button)findViewById(R.id.refreshStatus);
+        refresh = (Button) findViewById(R.id.refreshStatus);
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -142,29 +142,40 @@ public class GroupAlarmActivity extends Activity {
         }
 
         @Override
-        public View getView(int position, final View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView, ViewGroup parent) {
             final int pos = position;
             final Context context = parent.getContext();
-            ParseUser user = user_List.get(position);
-            user.fetchInBackground(new GetCallback<ParseObject>() {
-                @Override
-                public void done(ParseObject parseObject, ParseException e) {
-                    int status = parseObject.getInt("status");
-                    if (status == 0) {
-                        TextView name = (TextView) convertView.findViewById(R.id.sleepUser);
-                        name.setText(parseObject.get("name").toString());
-                        my_app.LazyUserList.add(parseObject.getObjectId());
-                    } else if (status == 2) {
-                        TextView name = (TextView) convertView.findViewById(R.id.hesitateUser);
-                        name.setText(parseObject.get("name").toString());
-                        my_app.LazyUserList.add(parseObject.getObjectId());
-                    } else {
-                        TextView name = (TextView) convertView.findViewById(R.id.wakeupUser);
-                        name.setText(parseObject.get("name").toString());
-                    }
-                }
-            });
 
+            
+            if ( convertView == null ) {
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.user_status, parent, false);
+
+                // TextView  position ? ?
+
+                ParseUser user = user_List.get(position);
+                try{
+                    user.fetchIfNeeded();
+                }
+                catch(Exception e){
+
+                }
+                int status = user.getInt("status");
+                if(status==0){
+                    TextView name = (TextView) convertView.findViewById(R.id.sleepUser);
+                    name.setText(user.get("name").toString());
+                    my_app.LazyUserList.add(user.getObjectId());
+                }
+                else if(status == 2){
+                    TextView name = (TextView) convertView.findViewById(R.id.hesitateUser);
+                    name.setText(user.get("name").toString());
+                    my_app.LazyUserList.add(user.getObjectId());
+                }
+                else {
+                    TextView name = (TextView) convertView.findViewById(R.id.wakeupUser);
+                    name.setText(user.get("name").toString());
+                }
+            }
             return convertView;
         }
 
@@ -206,4 +217,6 @@ public class GroupAlarmActivity extends Activity {
         }
         listview.setAdapter(adapter);
     }
+
+
 }

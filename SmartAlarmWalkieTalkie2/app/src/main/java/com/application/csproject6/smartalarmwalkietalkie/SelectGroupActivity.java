@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class SelectGroupActivity extends FragmentActivity {
-    public static int ALARM_FLAG =0;
+    public static int ALARM_FLAG = 0;
     public static int WT_FLAG = 1;
     IalarmControllerInterface acl;
     private Button makeGrButton;
@@ -56,6 +56,7 @@ public class SelectGroupActivity extends FragmentActivity {
     String newGroupName;
     int hour;
     int minute;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i("SelectGroup", "onCreate");
@@ -68,14 +69,13 @@ public class SelectGroupActivity extends FragmentActivity {
         bar.setCustomView(R.layout.cust_actionbar);
 
         setContentView(R.layout.activity_selectgroup);
-        joinGButton = (Button)findViewById(R.id.groupJoin);
-        joinGroup_Name = (EditText)findViewById(R.id.joinGroup);
+        joinGButton = (Button) findViewById(R.id.groupJoin);
+        joinGroup_Name = (EditText) findViewById(R.id.joinGroup);
         makeGrButton = (Button) findViewById(R.id.makeGroupBtn);
-        groupListView = (ListView)findViewById(R.id.groupList);
-        delGroupButton = (Button)findViewById(R.id.deleteGroup);
+        groupListView = (ListView) findViewById(R.id.groupList);
+        delGroupButton = (Button) findViewById(R.id.deleteGroup);
         adapter = new group_Adapter();
         user = ParseUser.getCurrentUser();
-
 
 
         ((SampleApplication) getApplicationContext()).music = new MediaPlayer();
@@ -85,6 +85,13 @@ public class SelectGroupActivity extends FragmentActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 ParseObject group = (ParseObject) groupListView.getItemAtPosition(position);
+                try {
+                    group.fetchIfNeeded();
+                } catch (Exception e) {
+
+                }
+
+
                 if (group.getInt("flag") == ALARM_FLAG) {
                     Intent nextActivity = new Intent(getApplicationContext(), GroupAlarmActivity.class);
                     SampleApplication app = (SampleApplication) getApplication();
@@ -98,7 +105,7 @@ public class SelectGroupActivity extends FragmentActivity {
                 }
             }
         });
-        refresh = (Button)findViewById(R.id.refreshGroup);
+        refresh = (Button) findViewById(R.id.refreshGroup);
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -119,64 +126,64 @@ public class SelectGroupActivity extends FragmentActivity {
             @Override
             public void onClick(View view) {
                 final String name = joinGroup_Name.getText().toString();
-                if(!name.equals("")){
+                if (!name.equals("")) {
                     ParseQuery<ParseObject> query = ParseQuery.getQuery("group");
                     query.whereEqualTo("name", name);
                     query.findInBackground(new FindCallback<ParseObject>() {
-                        @Override
-                        public void done(List<ParseObject> groupList, ParseException e) {
+                                               @Override
+                                               public void done(List<ParseObject> groupList, ParseException e) {
 
-                            if (e == null) {
-                                if(groupList.isEmpty())
-                                    Toast.makeText(getApplicationContext(),"There is no group \""+name+"\"!",Toast.LENGTH_LONG).show();
-                                else {
-                                    ParseObject group = groupList.get(0);
-                                    if (group.getList("member").contains(ParseUser.getCurrentUser())) {
-                                        Toast.makeText(getApplicationContext(), "You are already in \"" + name + "\"!", Toast.LENGTH_LONG).show();
-                                    } else {
-                                        group.add("member", ParseUser.getCurrentUser());
-                                        ParseUser.getCurrentUser().add("joinGroup", group);
-                                        adapter.add(group);
-                                        adapter.notifyDataSetChanged();
-                                        Intent nextActivity = new Intent(getApplicationContext(), GroupAlarmActivity.class);
-                                        SampleApplication app = (SampleApplication) getApplication();
-                                        try {
-                                            acl.addAlarmT(group.get("name").toString(), group.getInt("year"), group.getInt("month"), group.getInt("day"), group.getInt("hour"), group.getInt("minute"),group.getObjectId());
-                                        } catch (RemoteException ee) {
-                                            ee.printStackTrace();
-                                        }
-                                        if(app.getGroupList()==null){
-                                            app.setGroupList(new ArrayList<ParseObject>());
-                                        }
+                                                   if (e == null) {
+                                                       if (groupList.isEmpty())
+                                                           Toast.makeText(getApplicationContext(), "There is no group \"" + name + "\"!", Toast.LENGTH_LONG).show();
+                                                       else {
+                                                           ParseObject group = groupList.get(0);
+                                                           if (group.getList("member").contains(ParseUser.getCurrentUser())) {
+                                                               Toast.makeText(getApplicationContext(), "You are already in \"" + name + "\"!", Toast.LENGTH_LONG).show();
+                                                           } else {
+                                                               group.add("member", ParseUser.getCurrentUser());
+                                                               ParseUser.getCurrentUser().add("joinGroup", group);
+                                                               adapter.add(group);
+                                                               adapter.notifyDataSetChanged();
+                                                               Intent nextActivity = new Intent(getApplicationContext(), GroupAlarmActivity.class);
+                                                               SampleApplication app = (SampleApplication) getApplication();
+                                                               try {
+                                                                   acl.addAlarmT(group.get("name").toString(), group.getInt("year"), group.getInt("month"), group.getInt("day"), group.getInt("hour"), group.getInt("minute"), group.getObjectId());
+                                                               } catch (RemoteException ee) {
+                                                                   ee.printStackTrace();
+                                                               }
+                                                               if (app.getGroupList() == null) {
+                                                                   app.setGroupList(new ArrayList<ParseObject>());
+                                                               }
 
-                                        app.getGroupList().add(group);
-                                        app.setCurrent_group(group);
+                                                               app.getGroupList().add(group);
+                                                               app.setCurrent_group(group);
 
-                                        ParseUser.getCurrentUser().put("status", CheckVoiceActivity.BEFORE_THE_TEST);
-                                        startActivity(nextActivity);
-                                    }
-                                    group.saveInBackground();
-                                    group.pinInBackground();
-                                }
-                            }
-                        }
-                    }
+                                                               ParseUser.getCurrentUser().put("status", CheckVoiceActivity.BEFORE_THE_TEST);
+                                                               startActivity(nextActivity);
+                                                           }
+                                                           group.saveInBackground();
+                                                           group.pinInBackground();
+                                                       }
+                                                   }
+                                               }
+                                           }
 
-                );}
+                    );
+                }
             }
         });
 
         delGroupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                for(int i=adapter.group_List.size()-1;i>-1;i--){
+                for (int i = adapter.group_List.size() - 1; i > -1; i--) {
                     ParseObject group = adapter.group_List.remove(i);
-                    if(group.getList("member").size()==1){
+                    if (group.getList("member").size() == 1) {
                         ParseUser.getCurrentUser().getList("joinGroup").remove(group);
                         ParseUser.getCurrentUser().saveInBackground();
                         group.deleteEventually();
-                    }
-                    else{
+                    } else {
                         ParseUser.getCurrentUser().getList("joinGroup").remove(group);
                         ParseUser.getCurrentUser().saveInBackground();
                         group.getList("member").remove(ParseUser.getCurrentUser());
@@ -184,8 +191,7 @@ public class SelectGroupActivity extends FragmentActivity {
                     }
                     try {
                         acl.clearAlarm();
-                    }
-                    catch(RemoteException e){
+                    } catch (RemoteException e) {
                         e.printStackTrace();
                     }
                 }
@@ -194,16 +200,16 @@ public class SelectGroupActivity extends FragmentActivity {
             }
         });
 
-        sC = new ServiceConnection(){
-            public void onServiceConnected(ComponentName name, IBinder service){
+        sC = new ServiceConnection() {
+            public void onServiceConnected(ComponentName name, IBinder service) {
                 Log.i("onServiceConnected", "called!!!!! : ");
 
                 StackTraceElement[] stackTrace = new Exception().getStackTrace();
-                Log.i("serviconnected",stackTrace.toString());
+                Log.i("serviconnected", stackTrace.toString());
 
                 acl = IalarmControllerInterface.Stub.asInterface(service);
 
-                if(alarmInit == false) {
+                if (alarmInit == false) {
                     try {
                         Log.i("in SelecGroup", "clearAlarm()");
                         acl.clearAlarm();
@@ -216,21 +222,24 @@ public class SelectGroupActivity extends FragmentActivity {
                 }
 
             }
-            public void onServiceDisconnected(ComponentName name){
+
+            public void onServiceDisconnected(ComponentName name) {
                 acl = null;
             }
         };
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode==0){
+        if (requestCode == 0) {
             newGroupName = data.getStringExtra("name");
-            hour = data.getIntExtra("hour",0);
-            minute = data.getIntExtra("minute",0);
+            hour = data.getIntExtra("hour", 0);
+            minute = data.getIntExtra("minute", 0);
         }
     }
+
     //INjae
     @Override
     public void onBackPressed() {
@@ -238,19 +247,19 @@ public class SelectGroupActivity extends FragmentActivity {
     }
 
     @Override
-    public void onRestart(){
+    public void onRestart() {
         super.onRestart();
     }
 
 
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
 
-        Intent it = new Intent(this,alarmController.class);
+        Intent it = new Intent(this, alarmController.class);
         bindService(it, sC, BIND_AUTO_CREATE);
     }
 
-    protected void onPause(){
+    protected void onPause() {
         super.onPause();
         unbindService(sC);
     }
@@ -284,6 +293,7 @@ public class SelectGroupActivity extends FragmentActivity {
         public group_Adapter() {
             group_List = new ArrayList<>();
         }
+
         @Override
         public int getCount() {
             return group_List.size();
@@ -305,46 +315,44 @@ public class SelectGroupActivity extends FragmentActivity {
             final Context context = parent.getContext();
 
             // Ʈ 鼭  ȭ鿡  ʴ  converView null ·
-            if ( convertView == null ) {
+            if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(R.layout.list_item, parent, false);
 
                 // TextView  position ڿ ߰
                 final TextView groupName = (TextView) convertView.findViewById(R.id.group_name);
                 final Date alarmTime;
-                final SimpleDateFormat formatter = new SimpleDateFormat( "알람시간 : HH시 mm분", Locale.KOREA );
+                final SimpleDateFormat formatter = new SimpleDateFormat("알람시간 : HH시 mm분", Locale.KOREA);
                 final TextView time = (TextView) convertView.findViewById(R.id.alarm_time);
                 final TextView number = (TextView) convertView.findViewById(R.id.number_people);
                 final String dTime;
                 ParseQuery<ParseObject> query = ParseQuery.getQuery("group");
 
-                if(group_List.get(pos).getObjectId()==null){
-                    if(group_List.get(pos).getInt("flag")==ALARM_FLAG){
+                if (group_List.get(pos).getObjectId() == null) {
+                    if (group_List.get(pos).getInt("flag") == ALARM_FLAG) {
                         groupName.setText(newGroupName);
-                        time.setText("알람시간 : "+hour+"시 "+minute+"분");
-                        number.setText(String.valueOf("총 인원 :            "+"1명"));
+                        time.setText("알람시간 : " + hour + "시 " + minute + "분");
+                        number.setText(String.valueOf("총 인원 :            " + "1명"));
                     }
 
                 }
                 query.getInBackground(group_List.get(pos).getObjectId(), new GetCallback<ParseObject>() {
                     @Override
                     public void done(ParseObject parseObject, ParseException e) {
-                        try{
-                            if(parseObject.getInt("flag")==ALARM_FLAG){
+                        try {
+                            if (parseObject.getInt("flag") == ALARM_FLAG) {
                                 Date alarmTime = calcTime(parseObject);
                                 String dTime = formatter.format(alarmTime);
                                 groupName.setText(parseObject.get("name").toString());
                                 time.setText(dTime);
-                                number.setText(String.valueOf("총 인원 :            " + num_People(parseObject)+"명"));
-                            }
-                            else{
+                                number.setText(String.valueOf("총 인원 :            " + num_People(parseObject) + "명"));
+                            } else {
                                 groupName.setText(parseObject.get("name").toString());
                                 time.setText("");
-                                number.setText(String.valueOf("총 인원 :            " + num_People(parseObject)+"명"));
+                                number.setText(String.valueOf("총 인원 :            " + num_People(parseObject) + "명"));
                             }
 
-                        }
-                        catch(Exception ee){
+                        } catch (Exception ee) {
 
                         }
 
@@ -357,13 +365,17 @@ public class SelectGroupActivity extends FragmentActivity {
         public void add(ParseObject _msg) {
             group_List.add(_msg);
         }
-        public ParseObject get(int position){
+
+        public ParseObject get(int position) {
             return group_List.get(position);
         }
 
-        public Date calcTime(ParseObject group){
-            int year = (int)group.get("year");int month = (int)group.get("month");int day = (int)group.get("day");
-            int hour = (int)group.get("hour");int minute = (int)group.get("minute");
+        public Date calcTime(ParseObject group) {
+            int year = (int) group.get("year");
+            int month = (int) group.get("month");
+            int day = (int) group.get("day");
+            int hour = (int) group.get("hour");
+            int minute = (int) group.get("minute");
             Log.i("calcTime()", year + "/" + month + "/" + day + " " + hour + ":" + minute);
             GregorianCalendar calendar = new GregorianCalendar();
             calendar.set(year, month, day, hour, minute);
@@ -371,30 +383,29 @@ public class SelectGroupActivity extends FragmentActivity {
             return calendar.getTime();
         }
 
-        public int num_People(ParseObject group){
+        public int num_People(ParseObject group) {
             List<ParseObject> groups = group.getList("member");
             return groups.size();
         }
     }
 
 
-    public void groupUpdate(){
+    public void groupUpdate() {
 
         List<ParseObject> groups = ParseUser.getCurrentUser().getList("joinGroup");
-        if(groups != null){
-            ((SampleApplication)getApplication()).setGroupList((ArrayList)groups);
+        if (groups != null) {
+            ((SampleApplication) getApplication()).setGroupList((ArrayList) groups);
         }
 
-        if(groups!=null){
-            for(ParseObject group: groups){
-                try{
+        if (groups != null) {
+            for (ParseObject group : groups) {
+                try {
                     group.fetchInBackground();
-                }
-                catch (Exception e){
+                } catch (Exception e) {
 
                 }
 
-                if(!adapter.group_List.contains(group)) {
+                if (!adapter.group_List.contains(group)) {
                     adapter.add(group);
 
                 }
@@ -404,9 +415,10 @@ public class SelectGroupActivity extends FragmentActivity {
         }
         groupListView.setAdapter(adapter);
     }
+
     public void onDestroy() {
         super.onDestroy();
-        ((SampleApplication)getApplicationContext()).music.release();
+        ((SampleApplication) getApplicationContext()).music.release();
     }
 }
 
