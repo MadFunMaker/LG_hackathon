@@ -11,13 +11,13 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-
+    <!--
     <permission
         android:name="com.application.csproject6.smartalarmwalkietalkie.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
     <uses-permission android:name="com.application.csproject6.smartalarmwalkietalkie.permission.C2D_MESSAGE" />
-
+    -->
     <application
         android:name=".SampleApplication"
         android:allowBackup="true"
@@ -85,6 +85,7 @@
         </service>
         <service android:name=".ReceivingMessage" >
         </service>
+
         <service android:name="com.parse.PushService" />
 
         <receiver android:name="com.parse.ParseBroadcastReceiver" >
@@ -103,7 +104,6 @@
                 <category android:name="com.application.csproject6.smartalarmwalkietalkie" />
             </intent-filter>
         </receiver>
-        <!-- application.csproject6.smartalarmwalkietalkie.SDpleaseWork -->
         <receiver
             android:name="com.application.csproject6.smartalarmwalkietalkie.SDpleaseWork"
             android:exported="false" >

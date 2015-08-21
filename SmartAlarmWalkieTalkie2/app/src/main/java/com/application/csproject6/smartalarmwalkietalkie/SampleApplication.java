@@ -51,6 +51,7 @@ public class SampleApplication extends Application {
     private ArrayList<ParseObject> groupList;
 
     public ArrayList<String> LazyUserList;
+
     public List<String> songs = new ArrayList<String>();
     int currentPosition;
 
@@ -83,14 +84,13 @@ public class SampleApplication extends Application {
 
 /*
         Log.d("spchoi", "here is good");
-
+        JSONObject iter = new JSONObject();
         ParseQuery pushQuery = ParseInstallation.getQuery();
         pushQuery.whereEqualTo("channels", "Giants");
         ParsePush push = new ParsePush();
         push.setQuery(pushQuery);
-        push.setMessage("The Giants just scored! It's now 2-2 against the Mets.");
+        push.setData(iter);
         push.sendInBackground();
-
         Log.d("spchoi" , "helpMe");
 */
 

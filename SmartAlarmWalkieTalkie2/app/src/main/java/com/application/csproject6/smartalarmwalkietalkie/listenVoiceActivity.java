@@ -171,6 +171,7 @@ public class listenVoiceActivity extends Activity
                 });
 
 
+                /*
                 ParseQuery pushQuery = ParseInstallation.getQuery();
                 pushQuery.whereEqualTo("channels", "Giants");
                 ParsePush push = new ParsePush();
@@ -183,6 +184,7 @@ public class listenVoiceActivity extends Activity
                 Log.d("spchoi" , sv.toString());
                 push.setMessage(sv.toString());
                 push.sendInBackground();
+                */
 
                 Log.i("listenVoice","sendBtn to deleteFile");
                 deleteFile();
