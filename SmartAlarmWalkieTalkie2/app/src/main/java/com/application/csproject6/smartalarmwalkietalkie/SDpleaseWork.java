@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 
 import com.parse.*;
@@ -43,9 +44,16 @@ public class SDpleaseWork extends com.parse.ParsePushBroadcastReceiver {
 
     @Override
     protected void onPushReceive(Context context, Intent intent) {
+
+        if(listenVoiceActivity.ScvsDream.equals("ISandIt"))
+        {
+            return; // already works.
+        }
+
         JSONObject pushData = null;
 
         try {
+            intent.getStringExtra("com.parse.message");
             pushData = new JSONObject(intent.getStringExtra("com.parse.Data"));
         } catch (JSONException var7) {
             Log.d("spchoi", "Unexpected JSONException when receiving push data: ");
@@ -55,8 +63,6 @@ public class SDpleaseWork extends com.parse.ParsePushBroadcastReceiver {
         if(pushData != null) {
             action = pushData.optString("action", (String)null);
         }
-
-        Log.d("spchoi" , "action : " + action);
 
         if(action != null) {
             Bundle notification = intent.getExtras();
@@ -76,41 +82,29 @@ public class SDpleaseWork extends com.parse.ParsePushBroadcastReceiver {
             //TODO: should make Audio Play Logic. should call Alarm receiver.
             //file로 써야함.
             try {
+
                 byte[] sd_buffer = scvsdrem.getString("alert").getBytes(Charset.forName("UTF-8"));
-
-                File path=new File(context.getCacheDir()+"/musicfile.3gp");
-
+                
+                String currentFilePath = Environment.getExternalStorageDirectory().getPath()+"/musicfile.wav";
+                File temp = new File(currentFilePath);
                 FileOutputStream fos = null;
                 try {
-                    fos = new FileOutputStream(path);
+                    fos = new FileOutputStream(temp);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
                 try {
                     fos.write(sd_buffer);
-                    fos.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
-                Log.d("spchoi" , "file wirte is successful");
 
-                MediaPlayer mediaPlayer = new MediaPlayer();
-
-                try {
-                    mediaPlayer.setDataSource(context.getCacheDir()+"/musicfile.3gp");
-                    mediaPlayer.prepare();
-                    Log.d("spchoi", "media player prepare success");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                mediaPlayer.start();
-                Log.d("spchoi", "media play is successful");
+                Log.d("spchoi", "file wirte is successful");
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
 
         } catch (JSONException var3) {
             Log.d("spchoi", "Unexpected JSONException when receiving push data: ");

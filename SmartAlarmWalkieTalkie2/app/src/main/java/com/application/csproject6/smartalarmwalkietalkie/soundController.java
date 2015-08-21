@@ -196,7 +196,6 @@ public class soundController {
             long byteRate) throws IOException {
 
         byte[] header = new byte[44];
-
         header[0] = 'R';  // RIFF/WAVE header
         header[1] = 'I';
         header[2] = 'F';
