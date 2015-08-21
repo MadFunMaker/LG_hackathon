@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -31,6 +32,9 @@ public class MakeGroupActivity extends Activity {
     private EditText newAlarmName;
     private DatePicker datePicker;
     private TimePicker timePicker;
+    private RadioGroup typeChecker;
+    private Button settingAlarmBtn;
+    private int groupType;
     IalarmControllerInterface acl;
     Intent nextActivity;
     @Override
@@ -45,14 +49,32 @@ public class MakeGroupActivity extends Activity {
         bar.setTitle("그룹 만들기");
 
         setContentView(R.layout.activity_makegroup);
-
+        groupType=SelectGroupActivity.ALARM_FLAG;
         newAlarmName = (EditText)findViewById(R.id.newAlarmName);
         datePicker = (DatePicker)findViewById(R.id.datePicker);
         timePicker = (TimePicker)findViewById(R.id.timePicker);
+        typeChecker = (RadioGroup)findViewById(R.id.grouptype);
+        settingAlarmBtn  = (Button) findViewById(R.id.settingAlarmBtn);
 
-        Button settingAlarmBtn = (Button) findViewById(R.id.settingAlarmBtn);
-
-
+        typeChecker.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int args) {
+                switch(args){
+                    case R.id.alarmType:
+                        datePicker.setVisibility(View.VISIBLE);
+                        timePicker.setVisibility(View.VISIBLE);
+                        groupType=SelectGroupActivity.ALARM_FLAG;
+                        settingAlarmBtn.setText("Setting Alarm");
+                        break;
+                    case R.id.wtType:
+                        datePicker.setVisibility(View.INVISIBLE);
+                        timePicker.setVisibility(View.INVISIBLE);
+                        groupType=SelectGroupActivity.WT_FLAG;
+                        settingAlarmBtn.setText("Setting WT Group");
+                        break;
+                }
+            }
+        });
         nextActivity = new Intent(getApplicationContext(), SelectGroupActivity.class);
         settingAlarmBtn.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -115,37 +137,58 @@ public class MakeGroupActivity extends Activity {
                 public void done(List<ParseObject> groupList, ParseException e) {
                     if (e == null) {
                         if(groupList.isEmpty()){
-                            final int year = datePicker.getYear(); final int month = datePicker.getMonth(); final int day = datePicker.getDayOfMonth();
-                            final int hour = timePicker.getCurrentHour(); final int minute = timePicker.getCurrentMinute();
+
+                            if(groupType==SelectGroupActivity.ALARM_FLAG){
+                                final int year = datePicker.getYear(); final int month = datePicker.getMonth(); final int day = datePicker.getDayOfMonth();
+                                final int hour = timePicker.getCurrentHour(); final int minute = timePicker.getCurrentMinute();
 
 
-                            ParseUser curUser = ParseUser.getCurrentUser();
+                                ParseUser curUser = ParseUser.getCurrentUser();
 
-                            final ParseObject newGroup = new ParseObject("group");
-                            curUser.add("joinGroup", newGroup);
+                                final ParseObject newGroup = new ParseObject("group");
+                                curUser.add("joinGroup", newGroup);
 
-                            newGroup.add("member", curUser);
-
-                            newGroup.put("name", groupName);
-                            newGroup.put("year",year);newGroup.put("month",month);newGroup.put("day", day);
-                            newGroup.put("hour",hour);newGroup.put("minute", minute);
-                            nextActivity.putExtra("name", groupName);
-                            nextActivity.putExtra("hour", hour);
-                            nextActivity.putExtra("minute", minute);
-                            Log.i("makeGroup()", groupName + ": " + year + "/" + month + "/" + day + " " + hour + ":" + minute + "\n");
-                            curUser.saveInBackground();
-                            newGroup.saveInBackground(new SaveCallback() {
-                                @Override
-                                public void done(ParseException e) {
-                                    try {
-                                        acl.addAlarmT(groupName, year, month, day, hour, minute, newGroup.getObjectId());
-                                    } catch (RemoteException ee) {
-                                        ee.printStackTrace();
+                                newGroup.add("member", curUser);
+                                newGroup.put("flag", SelectGroupActivity.ALARM_FLAG);
+                                newGroup.put("name", groupName);
+                                newGroup.put("year",year);newGroup.put("month",month);newGroup.put("day", day);
+                                newGroup.put("hour",hour);newGroup.put("minute", minute);
+                                nextActivity.putExtra("name", groupName);
+                                nextActivity.putExtra("hour", hour);
+                                nextActivity.putExtra("minute", minute);
+                                Log.i("makeGroup()", groupName + ": " + year + "/" + month + "/" + day + " " + hour + ":" + minute + "\n");
+                                curUser.saveInBackground();
+                                newGroup.saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        try {
+                                            acl.addAlarmT(groupName, year, month, day, hour, minute, newGroup.getObjectId());
+                                        } catch (RemoteException ee) {
+                                            ee.printStackTrace();
+                                        }
+                                        setResult(0, nextActivity);
+                                        finish();
                                     }
-                                    setResult(0, nextActivity);
-                                    finish();
-                                }
-                            });
+                                });
+                            }
+                            else{
+                                ParseUser curUser = ParseUser.getCurrentUser();
+
+                                final ParseObject newGroup = new ParseObject("group");
+                                curUser.add("joinGroup", newGroup);
+                                newGroup.add("member", curUser);
+                                newGroup.put("flag", SelectGroupActivity.WT_FLAG);
+                                newGroup.put("name", groupName);
+                                nextActivity.putExtra("name", groupName);
+                                curUser.saveInBackground();
+                                newGroup.saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        setResult(0, nextActivity);
+                                        finish();
+                                    }
+                                });
+                            }
 
 
                         }

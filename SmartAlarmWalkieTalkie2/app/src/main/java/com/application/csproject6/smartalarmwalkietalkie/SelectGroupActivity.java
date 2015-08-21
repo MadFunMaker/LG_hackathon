@@ -39,6 +39,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class SelectGroupActivity extends FragmentActivity {
+    public static int ALARM_FLAG =0;
+    public static int WT_FLAG = 1;
     IalarmControllerInterface acl;
     private Button makeGrButton;
     private EditText joinGroup_Name;
@@ -82,10 +84,18 @@ public class SelectGroupActivity extends FragmentActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 ParseObject group = (ParseObject) groupListView.getItemAtPosition(position);
-                Intent nextActivity = new Intent(getApplicationContext(), GroupAlarmActivity.class);
-                SampleApplication app = (SampleApplication) getApplication();
-                app.setCurrent_group(group);
-                startActivity(nextActivity);
+                if(group.getInt("flag")==ALARM_FLAG){
+                    Intent nextActivity = new Intent(getApplicationContext(), GroupAlarmActivity.class);
+                    SampleApplication app = (SampleApplication) getApplication();
+                    app.setCurrent_group(group);
+                    startActivity(nextActivity);
+                }
+                else{
+                    Intent nextActivity = new Intent(getApplicationContext(), GroupAlarmActivity.class);
+                    SampleApplication app = (SampleApplication) getApplication();
+                    app.setCurrent_group(group);
+                    startActivity(nextActivity);
+                }
             }
         });
 
@@ -301,20 +311,32 @@ public class SelectGroupActivity extends FragmentActivity {
                 final TextView number = (TextView) convertView.findViewById(R.id.number_people);
                 final String dTime;
                 ParseQuery<ParseObject> query = ParseQuery.getQuery("group");
+
                 if(group_List.get(pos).getObjectId()==null){
-                    groupName.setText(newGroupName);
-                    time.setText("알람시간 : "+hour+"시 "+minute+"분");
-                    number.setText(String.valueOf("총 인원 :            "+"1명"));
+                    if(group_List.get(pos).getInt("flag")==ALARM_FLAG){
+                        groupName.setText(newGroupName);
+                        time.setText("알람시간 : "+hour+"시 "+minute+"분");
+                        number.setText(String.valueOf("총 인원 :            "+"1명"));
+                    }
+
                 }
                 query.getInBackground(group_List.get(pos).getObjectId(), new GetCallback<ParseObject>() {
                     @Override
                     public void done(ParseObject parseObject, ParseException e) {
                         try{
-                            Date alarmTime = calcTime(parseObject);
-                            String dTime = formatter.format(alarmTime);
-                            groupName.setText(parseObject.get("name").toString());
-                            time.setText(dTime);
-                            number.setText(String.valueOf("총 인원 :            " + num_People(parseObject)+"명"));
+                            if(parseObject.getInt("flag")==ALARM_FLAG){
+                                Date alarmTime = calcTime(parseObject);
+                                String dTime = formatter.format(alarmTime);
+                                groupName.setText(parseObject.get("name").toString());
+                                time.setText(dTime);
+                                number.setText(String.valueOf("총 인원 :            " + num_People(parseObject)+"명"));
+                            }
+                            else{
+                                groupName.setText(parseObject.get("name").toString());
+                                time.setText("");
+                                number.setText(String.valueOf("총 인원 :            " + num_People(parseObject)+"명"));
+                            }
+
                         }
                         catch(Exception ee){
 
