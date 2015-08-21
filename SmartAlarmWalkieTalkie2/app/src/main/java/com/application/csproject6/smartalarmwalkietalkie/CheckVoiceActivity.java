@@ -236,7 +236,11 @@ public class CheckVoiceActivity extends Activity implements View.OnClickListener
         }, 0);
         //fix-SH
 
-        myApp.startMusic(myApp.selectFile(getApplicationContext()));
+        if(ReceivingMessage.firstsong == false) {
+            myApp.startMusic(myApp.selectFile(getApplicationContext()));
+        }
+
+
         startService(sIntent);
 
 
@@ -287,7 +291,7 @@ public class CheckVoiceActivity extends Activity implements View.OnClickListener
         String givenString = givenText.replace("\n","").replaceAll(" ","");
         String getString = null;
 
-        Log.e("TEXT:",givenString);
+        Log.e("TEXT:", givenString);
         for(int i=0; i<texts.size(); i++){
             getString = texts.get(i).replace("\n","").replaceAll(" ","");
             if((double)LevenshteinDistance.computeLevenshteinDistance(getString,givenString)/(double)givenString.length()
@@ -304,7 +308,11 @@ public class CheckVoiceActivity extends Activity implements View.OnClickListener
             user.put("status", PASS_THE_TEST);
             user.saveInBackground();
 
-            SampleApplication.stopMusic();
+            if(ReceivingMessage.firstsong == false)
+                SampleApplication.stopMusic();
+            else
+                SampleApplication.stopSong();
+
             Intent next =  new Intent(getApplicationContext(), GroupAlarmActivity.class);
             startActivity(next);
             finish();

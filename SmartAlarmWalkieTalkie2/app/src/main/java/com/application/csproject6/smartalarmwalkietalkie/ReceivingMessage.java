@@ -85,12 +85,11 @@ public class ReceivingMessage extends IntentService {
                 Thread.sleep(3000);
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
-                SampleApplication.stopMusic();
+                //SampleApplication.stopMusic();
                 return;
             }
         }
-
-        SampleApplication.stopSong();
+        //SampleApplication.stopSong();
 
         Log.d(TAG, "END");
     }
