@@ -137,6 +137,7 @@ public class CheckVoiceActivity extends Activity implements View.OnClickListener
 
         //DAUM NEWTONE API ?댁젣
         SpeechRecognizerManager.getInstance().finalizeLibrary();
+        stopService(sIntent);
     }
 
     @Override

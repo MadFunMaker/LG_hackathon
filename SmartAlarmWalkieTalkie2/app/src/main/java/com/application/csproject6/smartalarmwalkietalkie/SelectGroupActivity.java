@@ -133,42 +133,50 @@ public class SelectGroupActivity extends FragmentActivity {
                     query.findInBackground(new FindCallback<ParseObject>() {
                                                @Override
                                                public void done(List<ParseObject> groupList, ParseException e) {
+                           if (e == null) {
+                               if (groupList.isEmpty())
+                                   Toast.makeText(getApplicationContext(), "There is no group \"" + name + "\"!", Toast.LENGTH_LONG).show();
+                               else {
+                                   ParseObject group = groupList.get(0);
+                                   if (group.getList("member").contains(ParseUser.getCurrentUser())) {
+                                       Toast.makeText(getApplicationContext(), "You are already in \"" + name + "\"!", Toast.LENGTH_LONG).show();
+                                   } else {
+                                       group.add("member", ParseUser.getCurrentUser());
+                                       ParseUser.getCurrentUser().add("joinGroup", group);
+                                       adapter.add(group);
+                                       adapter.notifyDataSetChanged();
 
-                                                   if (e == null) {
-                                                       if (groupList.isEmpty())
-                                                           Toast.makeText(getApplicationContext(), "There is no group \"" + name + "\"!", Toast.LENGTH_LONG).show();
-                                                       else {
-                                                           ParseObject group = groupList.get(0);
-                                                           if (group.getList("member").contains(ParseUser.getCurrentUser())) {
-                                                               Toast.makeText(getApplicationContext(), "You are already in \"" + name + "\"!", Toast.LENGTH_LONG).show();
-                                                           } else {
-                                                               group.add("member", ParseUser.getCurrentUser());
-                                                               ParseUser.getCurrentUser().add("joinGroup", group);
-                                                               adapter.add(group);
-                                                               adapter.notifyDataSetChanged();
-                                                               Intent nextActivity = new Intent(getApplicationContext(), GroupAlarmActivity.class);
-                                                               SampleApplication app = (SampleApplication) getApplication();
-                                                               try {
-                                                                   acl.addAlarmT(group.get("name").toString(), group.getInt("year"), group.getInt("month"), group.getInt("day"), group.getInt("hour"), group.getInt("minute"), group.getObjectId());
-                                                               } catch (RemoteException ee) {
-                                                                   ee.printStackTrace();
-                                                               }
-                                                               if (app.getGroupList() == null) {
-                                                                   app.setGroupList(new ArrayList<ParseObject>());
-                                                               }
-
-                                                               app.getGroupList().add(group);
-                                                               app.setCurrent_group(group);
-
-                                                               ParseUser.getCurrentUser().put("status", CheckVoiceActivity.BEFORE_THE_TEST);
-                                                               startActivity(nextActivity);
-                                                           }
-                                                           group.saveInBackground();
-                                                           group.pinInBackground();
-                                                       }
-                                                   }
-                                               }
+                                       SampleApplication app = (SampleApplication) getApplication();
+                                       Intent nextActivity;
+                                       if(group.getInt("flag")==ALARM_FLAG){
+                                           nextActivity = new Intent(getApplicationContext(), GroupAlarmActivity.class);
+                                           try {
+                                               acl.addAlarmT(group.get("name").toString(), group.getInt("year"), group.getInt("month"), group.getInt("day"), group.getInt("hour"), group.getInt("minute"), group.getObjectId());
+                                           } catch (RemoteException ee) {
+                                               ee.printStackTrace();
                                            }
+                                           ParseUser.getCurrentUser().put("status", CheckVoiceActivity.BEFORE_THE_TEST);
+
+                                       } else {
+                                           nextActivity = new Intent(getApplicationContext(), wtActivity.class);
+                                       }
+
+                                       if (app.getGroupList() == null) {
+                                           app.setGroupList(new ArrayList<ParseObject>());
+                                       }
+
+                                       app.getGroupList().add(group);
+                                       app.setCurrent_group(group);
+
+
+                                       startActivity(nextActivity);
+                                   }
+                                   group.saveInBackground();
+                                   group.pinInBackground();
+                               }
+                           }
+                       }
+                   }
 
                     );
                 }

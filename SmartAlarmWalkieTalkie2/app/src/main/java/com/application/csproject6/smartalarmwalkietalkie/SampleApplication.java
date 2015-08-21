@@ -45,6 +45,8 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class SampleApplication extends Application {
@@ -168,6 +170,35 @@ public class SampleApplication extends Application {
             }
         }
     }
+
+    public void sortSongList() {
+        //?��?��?��?��
+        String filepath = Environment.getExternalStorageDirectory().getPath();
+        File file = new File(filepath,soundController.AUDIO_PLAYING_FOLDER);
+
+        if(!file.exists()){
+            file.mkdirs();
+        }
+
+        // Add & Sort
+        File home = new File(filepath, soundController.AUDIO_PLAYING_FOLDER);
+        ArrayList<File> filesArrayList = new ArrayList<File>();
+        if (home.listFiles(new WaveFilter()).length > 0) {
+            for (File temp_file : home.listFiles(new WaveFilter())) {
+                filesArrayList.add(temp_file);
+            }
+        }
+//        Comparator<File> sortFiles = new Comparator<File>() {
+//            public int compare(File o1, File o2) {
+//                return o2.getName().compareTo(o1.getName());
+//            }
+//        };
+//        Collections.sort(filesArrayList, sortFiles); // 위에 설정한 내용대로 정렬(sort!)
+
+        songs.clear();
+        songs.add(filesArrayList.get(0).getAbsolutePath());
+    }
+
 
     class WaveFilter implements FilenameFilter {
         public boolean accept(File dir, String name) {

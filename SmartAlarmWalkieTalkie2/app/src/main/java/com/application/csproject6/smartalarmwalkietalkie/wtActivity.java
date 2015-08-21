@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -81,6 +82,9 @@ public class wtActivity extends Activity {
 //    Thread thread;
 //    int progress=0;
 
+    // Intent
+    Intent sIntent; //service Intent
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,6 +120,9 @@ public class wtActivity extends Activity {
         // Update List view
         updateListView();
 
+        // Turn on receiver (SDpleaseWorkMKII)
+        sIntent = new Intent(getApplicationContext(), SDpleaseWorkMKII.class);
+        startService(sIntent);
 //        Button recordVoiceBtn = (Button) findViewById(R.id.recordVoiceBtn);
 //
 //
@@ -365,43 +372,39 @@ public class wtActivity extends Activity {
         }
 
         @Override
-        public View getView(int position, final View convertView, ViewGroup parent) {
-
+        public View getView(int position, View convertView, ViewGroup parent) {
 
             final int pos = position;
             final Context context = parent.getContext();
-            ParseUser user = user_List.get(position);
-            user.fetchInBackground(new GetCallback<ParseObject>() {
-                @Override
-                public void done(ParseObject parseObject, ParseException e) {
-                    boolean isExist=false;
-                    for (int ii=0; ii<my_app.WtUserList.size(); ++ii) {
-                        if (parseObject.getObjectId().compareTo(my_app.WtUserList.get(ii)) == 0) {
-                            isExist = true;
-                            break;
-                        }
-                    }
-                    if (!isExist) my_app.WtUserList.add(parseObject.getObjectId());
 
-                    // should fill name in the list/
 
-//                    int status = parseObject.getInt("status");
-//                    if (status == 0) {
-//                        TextView name = (TextView) convertView.findViewById(R.id.sleepUser);
-//                        name.setText(parseObject.get("name").toString());
-//                        my_app.LazyUserList.add(parseObject.getObjectId());
-//                    } else if (status == 2) {
-//                        TextView name = (TextView) convertView.findViewById(R.id.hesitateUser);
-//                        name.setText(parseObject.get("name").toString());
-//                        my_app.LazyUserList.add(parseObject.getObjectId());
-//                    } else {
-//                        TextView name = (TextView) convertView.findViewById(R.id.wakeupUser);
-//                        name.setText(parseObject.get("name").toString());
-//                    }
+            if ( convertView == null ) {
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.user_status, parent, false);
+
+                // TextView  position ? ?
+
+                ParseUser user = user_List.get(position);
+                try{
+                    user.fetchIfNeeded();
                 }
-            });
+                catch(Exception e){
 
+                }
+
+                boolean isExist=false;
+                for (int ii=0; ii<my_app.WtUserList.size(); ++ii) {
+                    if (user.getObjectId().compareTo(my_app.WtUserList.get(ii)) == 0) {
+                        isExist = true;
+                        break;
+                    }
+                }
+                if (!isExist) my_app.WtUserList.add(user.getObjectId());
+                Log.e("bsjeon","end rget view");
+
+            }
             return convertView;
+
         }
 
 
@@ -415,11 +418,15 @@ public class wtActivity extends Activity {
     }
 
     public void updateListView() {
-        Date current = new Date();
 
 
         group = ((SampleApplication) getApplication()).getCurrent_group();
+        try{
+            group.fetchIfNeeded();
+        }
+        catch(Exception e){
 
+        }
         List<ParseUser> users = group.getList("member");
         adapter = new user_Adapter();
         listview = (ListView) findViewById(R.id.userList_wt);
@@ -430,7 +437,15 @@ public class wtActivity extends Activity {
 
         if (users != null) {
             int i = 0;
+
             for (ParseUser user : users) {
+                try{
+                    user.fetchIfNeeded();
+                }
+                catch(Exception e){
+
+                }
+                Log.e("bsjeon","after fetch: ");
                 if (!user.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
                     adapter.add(user);
                     i++;
