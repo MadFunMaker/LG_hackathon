@@ -1,5 +1,6 @@
 package com.application.csproject6.smartalarmwalkietalkie;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -11,7 +12,7 @@ import android.widget.Toast;
 
 import com.parse.ParseUser;
 
-public class wtActivity extends ActionBarActivity {
+public class wtActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

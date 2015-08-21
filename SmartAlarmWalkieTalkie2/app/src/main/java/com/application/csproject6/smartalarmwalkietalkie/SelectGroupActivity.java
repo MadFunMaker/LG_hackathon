@@ -91,7 +91,7 @@ public class SelectGroupActivity extends FragmentActivity {
                     startActivity(nextActivity);
                 }
                 else{
-                    Intent nextActivity = new Intent(getApplicationContext(), GroupAlarmActivity.class);
+                    Intent nextActivity = new Intent(getApplicationContext(), wtActivity.class);
                     SampleApplication app = (SampleApplication) getApplication();
                     app.setCurrent_group(group);
                     startActivity(nextActivity);
