@@ -51,6 +51,7 @@ public class SampleApplication extends Application {
     private ArrayList<ParseObject> groupList;
 
     public ArrayList<String> LazyUserList;
+    public ArrayList<String> WtUserList;
 
     public List<String> songs = new ArrayList<String>();
     int currentPosition;
