@@ -32,6 +32,9 @@ public class ReceivingMessage extends IntentService {
     public ReceivingMessage(){
         super("ReceivingMessage");
     }
+
+    public static boolean firstsong = false;
+
     @Override
     protected void onHandleIntent(Intent intent) {
         Log.d(TAG, "START");
@@ -47,25 +50,29 @@ public class ReceivingMessage extends IntentService {
 
         while(user.getInt("status") != PASS_THE_TEST)
         {
-            Log.i("receivingMsg","while!!");
+            Log.i("receivingMsg", "while!!");
             ParseUser.getCurrentUser().put("status", user.getInt("status"));
             ParseUser.getCurrentUser().saveInBackground();
-            soundQuery.whereEqualTo("group",current_group);
-            soundQuery.whereEqualTo("receiver",user.getObjectId());
+            soundQuery.whereEqualTo("group", current_group);
+            soundQuery.whereEqualTo("receiver", user.getObjectId());
             soundQuery.findInBackground(new FindCallback<ParseObject>() {
                 @Override
                 public void done(List<ParseObject> list, ParseException e) {
-                    if (list==null || list.isEmpty()) {
+                    if (list == null || list.isEmpty()) {
                         Log.i("receivingMsg", "emptyList");
                         return;
-                    }
-                    else {
+                    } else {
                         if (e == null) {
                             for (ParseObject object : list) {
                                 Log.i("receivingMsg", "savefile");
                                 saveFile(object);
                             }
-                            playMusic();
+
+                            if (firstsong == false) {
+                                Song();
+                                SampleApplication.Junesong = true;
+                                firstsong = true;
+                            }
 
                         } else {
                             Log.d("score", "Error: " + e.getMessage());
@@ -84,7 +91,9 @@ public class ReceivingMessage extends IntentService {
             }
         }
 
-        Log.d(TAG,"END");
+        SampleApplication.stopSong();
+
+        Log.d(TAG, "END");
     }
 
     @Override
@@ -125,7 +134,7 @@ public class ReceivingMessage extends IntentService {
         });
         return;
     }
-    public void playMusic(){
+    public void Song(){
         ((SampleApplication) getApplicationContext()).updateSongList();
         if(!((SampleApplication) getApplicationContext()).songs.isEmpty()){
             ((SampleApplication) getApplicationContext()).playSong(((SampleApplication) getApplicationContext()).songs.get(0));
