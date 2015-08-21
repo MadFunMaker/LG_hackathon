@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
@@ -73,7 +74,6 @@ public class wtActivity extends Activity {
     private user_Adapter adapter;
     private ListView listview;
     SampleApplication my_app;
-
 
     // Copied objects
     soundController voiceRecorder = null;
@@ -320,6 +320,7 @@ public class wtActivity extends Activity {
                     Toast.makeText(getApplicationContext(), "Recording Start", Toast.LENGTH_SHORT).show();
                     voiceRecorder.startRecord();
                     isRecording = true;
+
 //                    timer.schedule(new timerTask(), 8000);
                 }
 
@@ -416,7 +417,7 @@ public class wtActivity extends Activity {
 
             if ( convertView == null ) {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.user_status, parent, false);
+                convertView = inflater.inflate(R.layout.user_status_wt, parent, false);
 
                 // TextView  position ? ?
 
@@ -435,7 +436,15 @@ public class wtActivity extends Activity {
                         break;
                     }
                 }
-                if (!isExist) my_app.WtUserList.add(user.getObjectId());
+                if (!isExist) {
+                    TextView name = (TextView) convertView.findViewById(R.id.user_wt);
+                    name.setText(user.get("name").toString());
+//                    if (isReceived != null && isReceived.get(user.getObjectId()) == Boolean.TRUE) {
+//                        name.setTextColor(Color.BLUE);
+//                    }
+                    my_app.WtUserList.add(user.getObjectId());
+//                    isReceived.put(user.getObjectId(), Boolean.FALSE);
+                }
                 Log.e("bsjeon","end rget view");
 
             }
