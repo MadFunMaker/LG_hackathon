@@ -170,6 +170,7 @@ public class MakeGroupActivity extends Activity {
                                         finish();
                                     }
                                 });
+                                newGroup.pinInBackground();
                             }
                             else{
                                 ParseUser curUser = ParseUser.getCurrentUser();
@@ -188,6 +189,7 @@ public class MakeGroupActivity extends Activity {
                                         finish();
                                     }
                                 });
+                                newGroup.pinInBackground();
                             }
 
 
