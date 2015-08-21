@@ -141,10 +141,6 @@ public class SampleApplication extends Application {
         SampleApplication.Junesong = false;
     }
 
-    public void pauseMusic(){
-        Music.pause();
-    }
-
     public AssetFileDescriptor selectFile(Context context){
         try {
             AssetFileDescriptor descriptor = context.getAssets().openFd("alarm02.mp3");
