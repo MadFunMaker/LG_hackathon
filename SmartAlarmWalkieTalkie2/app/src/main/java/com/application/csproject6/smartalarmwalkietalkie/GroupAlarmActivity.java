@@ -17,6 +17,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.GetCallback;
+import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
@@ -132,37 +134,33 @@ public class GroupAlarmActivity extends Activity {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, final View convertView, ViewGroup parent) {
             final int pos = position;
             final Context context = parent.getContext();
-
-            // ? ?  ??  ?  converView null 째짠
-            if (convertView == null) {
-                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.user_status, parent, false);
-
-                // TextView  position ? ?
-
-                ParseUser user = user_List.get(position);
-                int status = user.getInt("status");
-                if (status == 0) {
-                    TextView name = (TextView) convertView.findViewById(R.id.sleepUser);
-                    name.setText(user.get("name").toString());
-                    my_app.LazyUserList.add(user.getObjectId());
-                } else if (status == 2) {
-                    TextView name = (TextView) convertView.findViewById(R.id.hesitateUser);
-                    name.setText(user.get("name").toString());
-                    my_app.LazyUserList.add(user.getObjectId());
-                } else {
-                    TextView name = (TextView) convertView.findViewById(R.id.wakeupUser);
-                    name.setText(user.get("name").toString());
+            ParseUser user = user_List.get(position);
+            user.fetchInBackground(new GetCallback<ParseObject>() {
+                @Override
+                public void done(ParseObject parseObject, ParseException e) {
+                    int status = parseObject.getInt("status");
+                    if (status == 0) {
+                        TextView name = (TextView) convertView.findViewById(R.id.sleepUser);
+                        name.setText(parseObject.get("name").toString());
+                        my_app.LazyUserList.add(parseObject.getObjectId());
+                    } else if (status == 2) {
+                        TextView name = (TextView) convertView.findViewById(R.id.hesitateUser);
+                        name.setText(parseObject.get("name").toString());
+                        my_app.LazyUserList.add(parseObject.getObjectId());
+                    } else {
+                        TextView name = (TextView) convertView.findViewById(R.id.wakeupUser);
+                        name.setText(parseObject.get("name").toString());
+                    }
                 }
-            }
+            });
+
             return convertView;
         }
 
 
-        // ??▣? ? ?
         public void add(ParseUser _msg) {
             user_List.add(_msg);
         }
