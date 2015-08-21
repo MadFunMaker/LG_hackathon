@@ -6,14 +6,34 @@
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MakeGroupActivity"
     >
 
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/grouptype"
+        android:orientation="horizontal">
+        <RadioButton
+            android:text="Alarm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/alarmType"
+            android:checked="true"
+        />
+        <RadioButton
+        android:text="WT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/wtType"
+        android:checked="false"
+        />
+    </RadioGroup>
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/newAlarmName"
         android:hint="Alarm Name"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_below="@id/grouptype" />
 
 
     <DatePicker
@@ -37,7 +57,7 @@
         android:id="@+id/settingAlarmBtn"
         android:text="setting Alarm"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/timePicker"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />

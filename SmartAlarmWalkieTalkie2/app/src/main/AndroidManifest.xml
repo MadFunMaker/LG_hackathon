@@ -12,11 +12,11 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
+    <permission
+        android:name="com.application.csproject6.smartalarmwalkietalkie.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
 
-    <permission android:protectionLevel="signature"
-        android:name="com.application.csproject6.smartalarmwalkietalkie.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.application.csproject6.smartalarmwalkietalkie.permission.C2D_MESSAGE" />
-
 
     <application
         android:name=".SampleApplication"
@@ -30,6 +30,7 @@
             android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -56,14 +57,17 @@
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity android:name=".SelectGroupActivity" />
-        <activity android:name=".MakeGroupActivity">
+        <activity android:name=".MakeGroupActivity" >
         </activity>
         <activity android:name=".GroupAlarmActivity" />
         <activity android:name=".RecordVoiceActivity" />
         <activity android:name=".CheckVoiceActivity" />
         <activity android:name=".listenVoiceActivity" />
-        <meta-data android:name="com.parse.push.gcm_sender_id"
-            android:value="id:193097026016" />;
+
+        <meta-data
+            android:name="com.parse.push.gcm_sender_id"
+            android:value="id:193097026016" />
+;
         <meta-data
             android:name="com.parse.APPLICATION_ID"
             android:value="@string/parse_app_id" />
@@ -79,40 +83,43 @@
             android:enabled="true"
             android:exported="true" >
         </service>
-        <service
-            android:name=".ReceivingMessage">
+        <service android:name=".ReceivingMessage" >
         </service>
-
-
         <service android:name="com.parse.PushService" />
-        <receiver android:name="com.parse.ParseBroadcastReceiver">
+
+        <receiver android:name="com.parse.ParseBroadcastReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
-
-        <receiver android:name="com.parse.GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND">
+        <receiver
+            android:name="com.parse.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
                 <category android:name="com.application.csproject6.smartalarmwalkietalkie" />
             </intent-filter>
         </receiver>
-        <!--application.csproject6.smartalarmwalkietalkie.SDpleaseWork-->
-        <receiver android:name="com.application.csproject6.smartalarmwalkietalkie.SDpleaseWork" android:exported="false">
+        <!-- application.csproject6.smartalarmwalkietalkie.SDpleaseWork -->
+        <receiver
+            android:name=".SDpleaseWork"
+            android:exported="false" >
             <intent-filter>
                 <action android:name="com.parse.push.intent.RECEIVE" />
                 <action android:name="com.parse.push.intent.DELETE" />
                 <action android:name="com.parse.push.intent.OPEN" />
             </intent-filter>
         </receiver>
-
-
-        <receiver android:name=".alarmReceiver">
+        <receiver android:name=".alarmReceiver" >
         </receiver>
 
+        <activity
+            android:name=".wtActivity"
+            android:label="@string/title_activity_wt" >
+        </activity>
     </application>
 
 </manifest>

@@ -80,4 +80,7 @@
     <string name="profile_title_logged_out">You must be logged in to view your profile</string>
 
     <string name="profile_login_button_label">Log in</string>
+    <string name="title_activity_wt">wtActivity</string>
+
+    <string name="hello_world">Hello world!</string>
 </resources>
