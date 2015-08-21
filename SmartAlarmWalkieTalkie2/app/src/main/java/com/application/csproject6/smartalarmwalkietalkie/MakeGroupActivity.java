@@ -90,11 +90,10 @@ public class MakeGroupActivity extends Activity {
         super.onResume();
         Intent it = new Intent(this,alarmController.class);
         bindService(it, sC, BIND_AUTO_CREATE);
-
     }
     @Override
     public void onBackPressed() {
-        setResult(1,nextActivity);
+        setResult(1, nextActivity);
         finish();
     }
     protected void onPause(){
@@ -166,11 +165,12 @@ public class MakeGroupActivity extends Activity {
                                         } catch (RemoteException ee) {
                                             ee.printStackTrace();
                                         }
-                                        setResult(0, nextActivity);
-                                        finish();
+
                                     }
                                 });
                                 newGroup.pinInBackground();
+                                setResult(0, nextActivity);
+                                finish();
                             }
                             else{
                                 ParseUser curUser = ParseUser.getCurrentUser();
@@ -185,11 +185,12 @@ public class MakeGroupActivity extends Activity {
                                 newGroup.saveInBackground(new SaveCallback() {
                                     @Override
                                     public void done(ParseException e) {
-                                        setResult(0, nextActivity);
-                                        finish();
+
                                     }
                                 });
                                 newGroup.pinInBackground();
+                                setResult(0, nextActivity);
+                                finish();
                             }
 
 

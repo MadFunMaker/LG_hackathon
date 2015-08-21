@@ -419,7 +419,6 @@ public class SelectGroupActivity extends FragmentActivity {
 
     public void onDestroy() {
         super.onDestroy();
-        //SampleApplication.music.release();
     }
 }
 
