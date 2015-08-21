@@ -38,7 +38,6 @@ import java.util.List;
 public class listenVoiceActivity extends Activity
 {
     MediaPlayer music = new MediaPlayer();
-    static String ScvsDream = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -184,7 +183,6 @@ public class listenVoiceActivity extends Activity
                 Log.d("spchoi" , sv.toString());
                 push.setMessage(sv.toString());
                 push.sendInBackground();
-                ScvsDream = "ISandIt";
 
                 Log.i("listenVoice","sendBtn to deleteFile");
                 deleteFile();

@@ -17,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -100,6 +101,23 @@ public class SDpleaseWork extends com.parse.ParsePushBroadcastReceiver {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
+                MediaPlayer SDmusic = new MediaPlayer();
+                FileInputStream fis = null;
+                try {
+                    fis = new FileInputStream(temp);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                FileDescriptor fd = null;
+                try {
+                    fd = fis.getFD();
+                    SDmusic.setDataSource(fd);
+                    SDmusic.prepare();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                SDmusic.start();
 
 
                 Log.d("spchoi", "file wirte is successful");
