@@ -56,7 +56,7 @@ public class alarmController extends Service {
             ParseUser currUser = ParseUser.getCurrentUser();
             Collection<ParseObject> groups_c = currUser.getList("joinGroup");
 
-            int i = 0;
+
             if (groups_c != null) {
                 for (ParseObject group : groups_c) {
 
@@ -87,56 +87,61 @@ public class alarmController extends Service {
 
                             Intent alarmIntent = new Intent(getApplicationContext(), alarmReceiver.class);
                             alarmIntent.putExtra("groupName", group.getObjectId());
-                            PendingIntent tempPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), i, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
-                            pendingIntentList.add(i, tempPendingIntent);
-                            alarmList.add(i, a);
+                            PendingIntent tempPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), alarmList.size(), alarmIntent, PendingIntent.FLAG_ONE_SHOT);
+                            pendingIntentList.add(tempPendingIntent);
+                            alarmList.add(a);
                             aManager.set(AlarmManager.RTC_WAKEUP, alarmTime, tempPendingIntent);
                         }
 
                     } catch (Exception e) {
-                        try {
-                            group.fetchInBackground();
+                            group.fetchInBackground(new GetCallback<ParseObject>() {
+                                @Override
+                                public void done(ParseObject parseObject, ParseException e) {
+                                    if (parseObject.getInt("flag") == SelectGroupActivity.ALARM_FLAG) {
 
-                            String groupName = (String) group.get("name");
-                            int year = (int) group.get("year");
-                            int month = (int) group.get("month");
-                            int day = (int) group.get("day");
-                            int hour = (int) group.get("hour");
-                            int minute = (int) group.get("minute");
+                                        String groupName = (String) parseObject.get("name");
+                                    int year = (int) parseObject.get("year");
+                                    int month = (int) parseObject.get("month");
+                                    int day = (int) parseObject.get("day");
+                                    int hour = (int) parseObject.get("hour");
+                                    int minute = (int) parseObject.get("minute");
 
-                            alarm a = new alarm(groupName, year, month, day, hour, minute);
+                                    alarm a = new alarm(groupName, year, month, day, hour, minute);
 
-                            GregorianCalendar calendar = new GregorianCalendar();
-                            calendar.set(year, month, day, hour, minute, 0);
+                                    GregorianCalendar calendar = new GregorianCalendar();
+                                    calendar.set(year, month, day, hour, minute, 0);
 
-                            long alarmTime = calendar.getTimeInMillis();
-                            long currTime = System.currentTimeMillis();
-                            if (currTime > alarmTime) {
-                                Log.i("addAlarm()", "already passed");
-                                continue;
-                            } else {
-                                Log.i("addAlarm()", "at " + year + "/" + month + "/" + day + " " + hour + ":" + minute + "(" + alarmTime + ")");
-                            }
+                                    long alarmTime = calendar.getTimeInMillis();
+                                    long currTime = System.currentTimeMillis();
+                                    if (currTime > alarmTime) {
+                                        Log.i("addAlarm()", "already passed");
+                                        return;
+                                    } else {
+                                        Log.i("addAlarm()", "at " + year + "/" + month + "/" + day + " " + hour + ":" + minute + "(" + alarmTime + ")");
+                                    }
 
-                            ((SampleApplication) getApplication()).setCurrent_group(group);
+                                    ((SampleApplication) getApplication()).setCurrent_group(parseObject);
 
-                            Intent alarmIntent = new Intent(getApplicationContext(), alarmReceiver.class);
-                            alarmIntent.putExtra("groupName", group.getObjectId());
-                            PendingIntent tempPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), i, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
-                            pendingIntentList.add(i, tempPendingIntent);
-                            alarmList.add(i, a);
-                            aManager.set(AlarmManager.RTC_WAKEUP, alarmTime, tempPendingIntent);
-                        } catch (Exception ee) {
-                            ee.printStackTrace();
-                            return;
-                        }
+                                    Intent alarmIntent = new Intent(getApplicationContext(), alarmReceiver.class);
+                                    alarmIntent.putExtra("groupName", parseObject.getObjectId());
+                                    PendingIntent tempPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), alarmList.size(), alarmIntent, PendingIntent.FLAG_ONE_SHOT);
+                                    pendingIntentList.add(tempPendingIntent);
+                                    alarmList.add(a);
+                                    aManager.set(AlarmManager.RTC_WAKEUP, alarmTime, tempPendingIntent);
+                                    }
+                                }
+
+
+                            });
+
 
 
                     }
 
 
-                    i++;
                 }
+
+
             }
         }
 
