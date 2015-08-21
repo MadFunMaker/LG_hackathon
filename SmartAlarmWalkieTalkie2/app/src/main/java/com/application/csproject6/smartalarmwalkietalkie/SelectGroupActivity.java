@@ -49,6 +49,7 @@ public class SelectGroupActivity extends FragmentActivity {
     private group_Adapter adapter;
     private ParseUser user;
     private Button delGroupButton;
+    private Button refresh;
     double time;
     ServiceConnection sC;
     private boolean alarmInit;
@@ -57,7 +58,7 @@ public class SelectGroupActivity extends FragmentActivity {
     int minute;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i("SelectGroup","onCreate");
+        Log.i("SelectGroup", "onCreate");
         super.onCreate(savedInstanceState);
         ActionBar bar = getActionBar();
         alarmInit = false;
@@ -84,13 +85,12 @@ public class SelectGroupActivity extends FragmentActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 ParseObject group = (ParseObject) groupListView.getItemAtPosition(position);
-                if(group.getInt("flag")==ALARM_FLAG){
+                if (group.getInt("flag") == ALARM_FLAG) {
                     Intent nextActivity = new Intent(getApplicationContext(), GroupAlarmActivity.class);
                     SampleApplication app = (SampleApplication) getApplication();
                     app.setCurrent_group(group);
                     startActivity(nextActivity);
-                }
-                else{
+                } else {
                     Intent nextActivity = new Intent(getApplicationContext(), wtActivity.class);
                     SampleApplication app = (SampleApplication) getApplication();
                     app.setCurrent_group(group);
@@ -98,7 +98,13 @@ public class SelectGroupActivity extends FragmentActivity {
                 }
             }
         });
-
+        refresh = (Button)findViewById(R.id.refreshGroup);
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                groupUpdate();
+            }
+        });
         makeGrButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -150,6 +156,7 @@ public class SelectGroupActivity extends FragmentActivity {
                                         startActivity(nextActivity);
                                     }
                                     group.saveInBackground();
+                                    group.pinInBackground();
                                 }
                             }
                         }
@@ -233,7 +240,6 @@ public class SelectGroupActivity extends FragmentActivity {
     @Override
     public void onRestart(){
         super.onRestart();
-        groupUpdate();
     }
 
 
