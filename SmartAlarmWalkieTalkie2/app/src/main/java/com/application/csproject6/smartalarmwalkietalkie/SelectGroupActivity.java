@@ -401,7 +401,7 @@ public class SelectGroupActivity extends FragmentActivity {
         if (groups != null) {
             for (ParseObject group : groups) {
                 try {
-                    group.fetchInBackground();
+                    group.fetchIfNeeded();
                 } catch (Exception e) {
 
                 }
