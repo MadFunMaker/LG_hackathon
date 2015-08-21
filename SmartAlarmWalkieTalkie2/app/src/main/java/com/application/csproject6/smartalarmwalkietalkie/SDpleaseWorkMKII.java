@@ -39,7 +39,8 @@ public class SDpleaseWorkMKII extends IntentService {
         super("SDpleaseWorkMKII");
     }
 
-
+    // end while
+    public static boolean endWhile = true;
     @Override
     protected void onHandleIntent(Intent intent) {
         //if I get Intent I became UNDEFINED
@@ -48,7 +49,7 @@ public class SDpleaseWorkMKII extends IntentService {
         ParseUser user = ParseUser.getCurrentUser();
         ParseObject current_group=((SampleApplication)getApplication()).getCurrent_group();
 //        while((CurrentState = )== UNDEFINED)
-        while (true)
+        while (endWhile)
         {
             ParseUser.getCurrentUser().saveInBackground();
             soundQuery.whereEqualTo("group", current_group);
@@ -57,7 +58,7 @@ public class SDpleaseWorkMKII extends IntentService {
                 @Override
                 public void done(List<ParseObject> list, ParseException e) {
                     if (list == null || list.isEmpty()) {
-                        Log.i("receivingMsg", "emptyList");
+                        Log.i("SDpleaseWorkMKII", "HI");
                         return;
                     } else {
                         if (e == null) {
@@ -91,7 +92,7 @@ public class SDpleaseWorkMKII extends IntentService {
             });
 
             try {
-                Thread.sleep(500);
+                Thread.sleep(1000);
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
                 //SampleApplication.stopMusic();

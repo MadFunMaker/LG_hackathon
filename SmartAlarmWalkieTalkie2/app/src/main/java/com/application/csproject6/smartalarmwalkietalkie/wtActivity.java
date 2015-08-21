@@ -31,6 +31,8 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import net.daum.mf.speech.api.SpeechRecognizerManager;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -122,6 +124,7 @@ public class wtActivity extends Activity {
 
         // Turn on receiver (SDpleaseWorkMKII)
         sIntent = new Intent(getApplicationContext(), SDpleaseWorkMKII.class);
+        SDpleaseWorkMKII.endWhile = true;
         startService(sIntent);
 //        Button recordVoiceBtn = (Button) findViewById(R.id.recordVoiceBtn);
 //
@@ -134,6 +137,13 @@ public class wtActivity extends Activity {
 //                startActivity(nextActivity);
 //            }
 //        });
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.i("OnDestroy", "FUCK");
+        SDpleaseWorkMKII.endWhile = false;
+        stopService(sIntent);
     }
 
     @Override
