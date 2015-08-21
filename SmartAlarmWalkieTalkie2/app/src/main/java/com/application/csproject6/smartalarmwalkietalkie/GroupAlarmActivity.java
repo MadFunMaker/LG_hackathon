@@ -30,6 +30,7 @@ import java.util.List;
 public class GroupAlarmActivity extends Activity {
     ParseObject group;
     TextView groupName;
+    private Button refresh;
     private user_Adapter adapter;
     private ListView listview;
     SampleApplication my_app;
@@ -48,7 +49,14 @@ public class GroupAlarmActivity extends Activity {
         Collection<ParseObject> groups = ParseUser.getCurrentUser().getList("joinGroup");
         Intent intent = getIntent();
         updateListView();
+        refresh = (Button)findViewById(R.id.refreshStatus);
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateListView();
 
+            }
+        });
         groupName = (TextView) findViewById(R.id.groupName);
         groupName.setText(group.get("name").toString());
 
